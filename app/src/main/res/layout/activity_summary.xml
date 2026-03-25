@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#0D1B2A"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/matchText"
+        android:text="Match"
+        android:textColor="#FFF"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/resultText"
+        android:layout_height="wrap_content"
+        android:text="TEAM WON"
+        android:textColor="#00E676"
+        android:textSize="28sp"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/scoreText"
+        android:layout_height="wrap_content"
+        android:text="Score"
+        android:textColor="#FFF"
+        android:textSize="18sp"
+        android:layout_marginTop="10dp"/>
+</LinearLayout>

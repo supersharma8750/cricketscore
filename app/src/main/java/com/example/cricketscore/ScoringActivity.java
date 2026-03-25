@@ -1,6 +1,7 @@
 package com.example.cricketscore;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -17,7 +18,7 @@ public class ScoringActivity extends AppCompatActivity {
 
     ArrayList<Player> players = new ArrayList<>();
     ArrayList<Bowler> bowlers = new ArrayList<>();
-
+    String tossWinner, decision;
     Player striker, nonStriker;
     Bowler currentBowler;
 
@@ -42,49 +43,33 @@ public class ScoringActivity extends AppCompatActivity {
         rrrText = findViewById(R.id.rrrText);
         playerContainer = findViewById(R.id.playerContainer);
         bowlerSpinner = findViewById(R.id.bowlerSpinner);
-
         teamA = getIntent().getStringExtra("teamA");
         teamB = getIntent().getStringExtra("teamB");
         oversLimit = Integer.parseInt(getIntent().getStringExtra("overs"));
-
+        tossWinner = getIntent().getStringExtra("tossWinner");
+        decision = getIntent().getStringExtra("decision");
         teamName.setText(teamA);
 
         initPlayers();
     }
 
+    // 🔥 INPUT FLOW
     void initPlayers() {
-        showInput("Striker Name", s -> {
+        showInput("Striker", s -> {
             striker = new Player(s);
             players.add(striker);
 
-            showInput("Non-Striker Name", ns -> {
+            showInput("Non-Striker", ns -> {
                 nonStriker = new Player(ns);
                 players.add(nonStriker);
 
-                showInput("Bowler Name", b -> {
+                showInput("Bowler", b -> {
                     currentBowler = new Bowler(b);
                     bowlers.add(currentBowler);
                     setupSpinner();
                     updateUI();
                 });
             });
-        });
-    }
-
-    void setupSpinner() {
-        ArrayList<String> names = new ArrayList<>();
-        for (Bowler b : bowlers) names.add(b.name);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item, names);
-
-        bowlerSpinner.setAdapter(adapter);
-
-        bowlerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
-                currentBowler = bowlers.get(pos);
-            }
-            public void onNothingSelected(AdapterView<?> p) {}
         });
     }
 
@@ -109,66 +94,62 @@ public class ScoringActivity extends AppCompatActivity {
         void onInput(String text);
     }
 
-    void updateUI() {
-        scoreText.setText(runs + "/" + wickets);
-        wicketText.setText("Wickets: " + wickets);
-        overText.setText("Overs: " + (balls / 6) + "." + (balls % 6));
+    void setupSpinner() {
+        ArrayList<String> names = new ArrayList<>();
+        for (Bowler b : bowlers) names.add(b.name);
 
-        double oversPlayed = balls / 6.0;
-        double crr = oversPlayed > 0 ? runs / oversPlayed : 0;
-        crrText.setText("CRR: " + String.format("%.2f", crr));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, names);
 
-        if (isSecondInnings) {
-            targetText.setText("Target: " + target);
+        bowlerSpinner.setAdapter(adapter);
 
-            int ballsLeft = (oversLimit * 6) - balls;
-            int runsNeeded = target - runs;
-
-            double oversLeft = ballsLeft / 6.0;
-            double rrr = oversLeft > 0 ? runsNeeded / oversLeft : 0;
-
-            rrrText.setText("RRR: " + String.format("%.2f", rrr));
-        }
-
-        showPlayers();
+        bowlerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
+                currentBowler = bowlers.get(pos);
+            }
+            public void onNothingSelected(AdapterView<?> p) {}
+        });
     }
 
-    void showPlayers() {
-        playerContainer.removeAllViews();
-
-        TextView s = new TextView(this);
-        s.setText("⭐ " + striker.getStats());
-        playerContainer.addView(s);
-
-        TextView ns = new TextView(this);
-        ns.setText("• " + nonStriker.getStats());
-        playerContainer.addView(ns);
-
-        TextView b = new TextView(this);
-        b.setText("Bowler: " + currentBowler.getStats());
-        playerContainer.addView(b);
-    }
-
+    // 🔥 GAME LOGIC
     void addBall() {
         if (matchOver) return;
 
         balls++;
         currentBowler.balls++;
 
-        // 🔥 End of over
-        if (balls % 6 == 0) {
+        if (balls % 6 == 0 && balls < oversLimit * 6) {
             swapStrike();
-
-            // ❗ Ask for next bowler ONLY if match not over
-            if (!matchOver && balls < oversLimit * 6) {
-
-                showBowlerSelectionDialog();
-            }
+            askBowler();
         }
 
-        if (balls >= oversLimit * 6) {
-            endMatch();
-        }
+        if (balls >= oversLimit * 6) endMatch();
+    }
+
+    void askBowler() {
+        if (matchOver) return;
+
+        String[] options = new String[bowlers.size() + 1];
+
+        for (int i = 0; i < bowlers.size(); i++)
+            options[i] = bowlers.get(i).name;
+
+        options[bowlers.size()] = "New Bowler";
+
+        new AlertDialog.Builder(this)
+                .setTitle("Select Bowler")
+                .setItems(options, (d, which) -> {
+                    if (which < bowlers.size()) {
+                        currentBowler = bowlers.get(which);
+                    } else {
+                        showInput("New Bowler", name -> {
+                            Bowler b = new Bowler(name);
+                            bowlers.add(b);
+                            setupSpinner();
+                            currentBowler = b;
+                        });
+                    }
+                }).show();
     }
 
     void swapStrike() {
@@ -178,32 +159,26 @@ public class ScoringActivity extends AppCompatActivity {
     }
 
     public void addOne(View v) {
-        if (matchOver) return;
         runs++; striker.addRuns(1); currentBowler.runs++;
         addBall(); swapStrike(); updateUI(); checkWin();
     }
 
     public void addTwo(View v) {
-        if (matchOver) return;
         runs += 2; striker.addRuns(2); currentBowler.runs += 2;
         addBall(); updateUI(); checkWin();
     }
 
     public void addFour(View v) {
-        if (matchOver) return;
         runs += 4; striker.addRuns(4); currentBowler.runs += 4;
         addBall(); updateUI(); checkWin();
     }
 
     public void addSix(View v) {
-        if (matchOver) return;
         runs += 6; striker.addRuns(6); currentBowler.runs += 6;
         addBall(); updateUI(); checkWin();
     }
 
     public void addWicket(View v) {
-        if (matchOver) return;
-
         wickets++; striker.balls++; currentBowler.wickets++;
         addBall();
 
@@ -218,7 +193,6 @@ public class ScoringActivity extends AppCompatActivity {
     }
 
     public void addWide(View v) {
-        if (matchOver) return;
         runs++; currentBowler.runs++;
         updateUI(); checkWin();
     }
@@ -239,70 +213,120 @@ public class ScoringActivity extends AppCompatActivity {
     }
 
     void checkWin() {
-        if (isSecondInnings && runs >= target) {
-            matchOver = true;
-            scoreText.setText(teamB + " WON 🎉");
+        if (isSecondInnings && runs >= target && !matchOver) {
+            endMatch();
         }
     }
-    void showBowlerSelectionDialog() {
 
-        String[] options = new String[bowlers.size() + 1];
-
-        // Existing bowlers
-        for (int i = 0; i < bowlers.size(); i++) {
-            options[i] = bowlers.get(i).name;
-        }
-
-        // Add new option
-        options[bowlers.size()] = "➕ New Bowler";
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select Bowler");
-
-        builder.setItems(options, (dialog, which) -> {
-
-            // Existing bowler selected
-            if (which < bowlers.size()) {
-                currentBowler = bowlers.get(which);
-                bowlerSpinner.setSelection(which);
-            }
-            // New bowler
-            else {
-                showInput("Enter Bowler Name", name -> {
-                    Bowler b = new Bowler(name);
-                    bowlers.add(b);
-                    setupSpinner();
-                    currentBowler = b;
-                });
-            }
-        });
-
-        builder.setCancelable(false);
-        builder.show();
-    }
     void endMatch() {
-        if (!isSecondInnings) nextInnings(null);
-        else {
-            matchOver = true;
-            scoreText.setText((runs >= target ? teamB : teamA) + " WON");
+
+        if (!isSecondInnings) {
+            nextInnings(null);
+            return;
         }
+
+        matchOver = true;
+
+        String result;
+
+        if (runs >= target) {
+            // ✅ Team B wins by wickets
+            int wicketsLeft = 10 - wickets;
+
+            // 🔥 Balls left calculation
+            int ballsLeft = (oversLimit * 6) - balls;
+
+            result = teamB + " won by " + wicketsLeft + " wickets";
+
+            // ✅ Add balls left only if match finished early
+            if (ballsLeft > 0) {
+                result += " (" + ballsLeft + " balls left)";
+            }
+
+            result += " 🎉";
+
+        } else {
+            // ✅ Team A wins by runs
+            int runsDefended = target - runs - 1;
+
+            result = teamA + " won by " + runsDefended + " runs 🏆";
+        }
+
+        Intent i = new Intent(this, MatchSummaryActivity.class);
+        i.putExtra("teamA", teamA);
+        i.putExtra("teamB", teamB);
+        i.putExtra("result", result);
+        i.putExtra("score", runs + "/" + wickets);
+
+        startActivity(i);
+        finish();
     }
 
+    void updateUI() {
+        scoreText.setText(runs + "/" + wickets);
+        wicketText.setText("Wickets: " + wickets);
+        overText.setText("Overs: " + (balls / 6) + "." + (balls % 6));
+
+        double crr = balls > 0 ? (runs * 6.0) / balls : 0;
+        crrText.setText("CRR: " + String.format("%.2f", crr));
+
+        if (isSecondInnings) {
+            targetText.setText("Target: " + target);
+
+            int ballsLeft = (oversLimit * 6) - balls;
+            int runsNeeded = target - runs;
+
+            double rrr = ballsLeft > 0 ? (runsNeeded * 6.0) / ballsLeft : 0;
+            rrrText.setText("RRR: " + String.format("%.2f", rrr));
+        }
+
+        showPlayers();
+    }
+
+    void showPlayers() {
+        playerContainer.removeAllViews();
+
+        TextView s = new TextView(this);
+        s.setText("⭐ " + striker.getStats());
+        s.setTextColor(getResources().getColor(android.R.color.holo_green_light));
+        playerContainer.addView(s);
+
+        TextView ns = new TextView(this);
+        ns.setText("• " + nonStriker.getStats());
+        ns.setTextColor(getResources().getColor(android.R.color.white));
+        playerContainer.addView(ns);
+
+        TextView b = new TextView(this);
+        b.setText("Bowler: " + currentBowler.getStats());
+        b.setTextColor(getResources().getColor(android.R.color.holo_orange_light));
+        playerContainer.addView(b);
+    }
+
+    // 🔥 CLASSES
     static class Player {
-        String name; int runs = 0, balls = 0;
+        String name;
+        int runs = 0, balls = 0;
+
         Player(String n) { name = n; }
+
         void addRuns(int r) { runs += r; balls++; }
-        String getStats() { return name + " " + runs + "(" + balls + ")"; }
+
+        String getStats() {
+            return name + " " + runs + "(" + balls + ")";
+        }
     }
 
     static class Bowler {
-        String name; int balls = 0, runs = 0, wickets = 0;
+        String name;
+        int balls = 0, runs = 0, wickets = 0;
+
         Bowler(String n) { name = n; }
+
         String getStats() {
-            double o = balls / 6.0;
-            double eco = o > 0 ? runs / o : 0;
+            double overs = balls / 6.0;
+            double eco = overs > 0 ? runs / overs : 0;
             return name + " " + wickets + "/" + runs +
-                    " (" + String.format("%.1f", o) + ") Eco:" +
+                    " (" + String.format("%.1f", overs) + ") Eco:" +
                     String.format("%.2f", eco);
         }
     }

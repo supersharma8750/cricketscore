@@ -1,85 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0D1B2A"
-    android:padding="16dp">
+    android:padding="12dp">
 
-    <!-- TEAM NAME -->
+    <!-- TEAM -->
     <TextView
         android:id="@+id/teamName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TEAM A"
-        android:textSize="26sp"
-        android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:layout_centerHorizontal="true" />
+        android:textSize="22sp"
+        android:gravity="center"/>
 
     <!-- SCORE -->
     <TextView
         android:id="@+id/scoreText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="0/0"
-        android:textSize="48sp"
-        android:textStyle="bold"
+        android:textSize="40sp"
         android:textColor="#00E676"
-        android:layout_below="@id/teamName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
+        android:gravity="center"/>
 
     <!-- OVERS -->
     <TextView
         android:id="@+id/overText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Overs: 0.0"
-        android:textSize="18sp"
         android:textColor="#FFFFFF"
-        android:layout_below="@id/scoreText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
+        android:gravity="center"/>
 
     <!-- WICKETS -->
     <TextView
         android:id="@+id/wicketText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Wickets: 0"
-        android:textSize="18sp"
         android:textColor="#FFFFFF"
-        android:layout_below="@id/overText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"/>
+        android:gravity="center"/>
 
     <!-- TARGET -->
     <TextView
         android:id="@+id/targetText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text=""
-        android:textSize="18sp"
         android:textColor="#FFD54F"
-        android:layout_below="@id/wicketText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"/>
+        android:gravity="center"/>
 
-    <!-- BOWLER DROPDOWN -->
+    <!-- 🔥 CRR -->
+    <TextView
+        android:id="@+id/crrText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CRR: 0.00"
+        android:textColor="#FFFFFF"
+        android:gravity="center"/>
+
+    <!-- 🔥 RRR -->
+    <TextView
+        android:id="@+id/rrrText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RRR: 0.00"
+        android:textColor="#FF5252"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"/>
+
+    <!-- 🔥 BOWLER SPINNER -->
     <Spinner
         android:id="@+id/bowlerSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/targetText"
-        android:layout_marginTop="10dp"/>
+        android:layout_height="50dp"
+        android:layout_marginBottom="5dp"/>
 
-    <!-- PLAYER LIST -->
+    <!-- 🔥 PLAYER LIST (SCROLLABLE) -->
     <ScrollView
-        android:id="@+id/playerScroll"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_below="@id/bowlerSpinner"
-        android:layout_marginTop="10dp">
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/playerContainer"
@@ -88,33 +91,11 @@
             android:orientation="vertical"/>
     </ScrollView>
 
-    <!-- BUTTON SECTION -->
+    <!-- 🔥 BUTTON SECTION -->
     <LinearLayout
-        android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/playerScroll"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp">
-
-        <!-- CRR -->
-        <TextView
-            android:id="@+id/crrText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CRR: 0.00"
-            android:textColor="#FFFFFF"
-            android:layout_gravity="center"/>
-
-        <!-- RRR -->
-        <TextView
-            android:id="@+id/rrrText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RRR: 0.00"
-            android:textColor="#FF5252"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"/>
+        android:orientation="vertical">
 
         <!-- ROW 1 -->
         <LinearLayout
@@ -125,17 +106,26 @@
             <Button
                 android:text="1"
                 android:onClick="addOne"
-                style="@style/ScoreButton"/>
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#1976D2"/>
 
             <Button
                 android:text="2"
                 android:onClick="addTwo"
-                style="@style/ScoreButton"/>
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#1976D2"/>
 
             <Button
                 android:text="4"
                 android:onClick="addFour"
-                style="@style/ScoreButton"/>
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#1976D2"/>
         </LinearLayout>
 
         <!-- ROW 2 -->
@@ -143,35 +133,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="8dp">
 
             <Button
                 android:text="6"
                 android:onClick="addSix"
-                style="@style/ScoreButton"/>
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#1976D2"/>
 
             <Button
                 android:text="W"
                 android:onClick="addWicket"
-                style="@style/ScoreButtonRed"/>
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#D32F2F"/>
 
             <Button
                 android:text="WD"
                 android:onClick="addWide"
-                style="@style/ScoreButtonBlue"/>
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#7B1FA2"/>
         </LinearLayout>
+
+        <!-- NEXT INNINGS -->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="NEXT INNINGS"
+            android:onClick="nextInnings"
+            android:backgroundTint="#FF9800"
+            android:textColor="#000000"
+            android:layout_marginTop="10dp"/>
     </LinearLayout>
 
-    <!-- NEXT INNINGS -->
-    <Button
-        android:id="@+id/nextBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="NEXT INNINGS"
-        android:onClick="nextInnings"
-        android:layout_below="@id/buttonLayout"
-        android:layout_marginTop="15dp"
-        android:background="#FF9800"
-        android:textColor="#FFFFFF"/>
-
-</RelativeLayout>
+</LinearLayout>
