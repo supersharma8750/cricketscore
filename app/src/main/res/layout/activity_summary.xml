@@ -4,31 +4,81 @@
     android:gravity="center"
     android:background="#0D1B2A"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
+    <!-- MATCH -->
     <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
         android:id="@+id/matchText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Match"
-        android:textColor="#FFF"
+        android:textColor="#FFFFFF"
         android:textSize="20sp"/>
 
+    <!-- RESULT -->
     <TextView
-        android:layout_width="wrap_content"
         android:id="@+id/resultText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TEAM WON"
         android:textColor="#00E676"
         android:textSize="28sp"
+        android:textStyle="bold"
         android:layout_marginTop="20dp"/>
 
+    <!-- SCORE -->
     <TextView
-        android:layout_width="wrap_content"
         android:id="@+id/scoreText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Score"
-        android:textColor="#FFF"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:layout_marginTop="10dp"/>
+
+    <!-- 🔥 ADD THIS -->
+    <TextView
+        android:id="@+id/tossText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Toss Info"
+        android:textColor="#FFD54F"
+        android:textSize="16sp"
+        android:layout_marginTop="6dp"/>
+
+    <!-- BUTTON -->
+    <Button
+        android:id="@+id/viewScorecardBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="VIEW SCORECARD"
+        android:background="#00E676"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"/>
+
+    <!-- SCORECARD -->
+    <ScrollView
+        android:id="@+id/scorecardScroll"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:visibility="gone"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:id="@+id/scorecardContainer"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
+    <Button
+        android:id="@+id/newMatchBtn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="NEW MATCH"
+        android:background="#FF9800"
+        android:textColor="#000"
+        android:layout_marginTop="10dp"/>
+
 </LinearLayout>

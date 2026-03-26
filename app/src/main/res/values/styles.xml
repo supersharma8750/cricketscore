@@ -1,31 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="ScoreButton">
-        <item name="android:layout_width">80dp</item>
-        <item name="android:layout_height">80dp</item>
-        <item name="android:layout_margin">8dp</item>
-        <item name="android:textSize">20sp</item>
+    <!-- BASE SCORE BUTTON -->
+    <style name="ScoreBtn">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">70dp</item>
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:backgroundTint">#1E88E5</item>
+        <item name="android:background">@drawable/score_blue</item>
     </style>
 
-    <style name="ScoreButtonRed">
-        <item name="android:layout_width">80dp</item>
-        <item name="android:layout_height">80dp</item>
-        <item name="android:layout_margin">8dp</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:backgroundTint">#E53935</item>
+    <style name="ScoreBtnGreen" parent="ScoreBtn">
+        <item name="android:background">@drawable/score_green</item>
     </style>
 
-    <style name="ScoreButtonBlue">
-        <item name="android:layout_width">80dp</item>
-        <item name="android:layout_height">80dp</item>
-        <item name="android:layout_margin">8dp</item>
-        <item name="android:textSize">16sp</item>
+    <style name="ScoreBtnDarkGreen" parent="ScoreBtn">
+        <item name="android:background">@drawable/score_dark_green</item>
+    </style>
+
+    <style name="ScoreBtnRed" parent="ScoreBtn">
+        <item name="android:background">@drawable/score_red</item>
+    </style>
+
+    <style name="ScoreBtnBlue" parent="ScoreBtn">
+        <item name="android:background">@drawable/score_blue</item>
+    </style>
+
+    <style name="ScoreBtnOrange" parent="ScoreBtn">
+        <item name="android:background">@drawable/score_orange</item>
+    </style>
+
+    <style name="ScoreBtnBrown" parent="ScoreBtn">
+        <item name="android:background">@drawable/score_brown</item>
+    </style>
+
+    <style name="ScoreBtnPurple" parent="ScoreBtn">
+        <item name="android:background">@drawable/score_purple</item>
+    </style>
+
+    <!-- ACTION BUTTON -->
+    <style name="ActionBtn">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_marginTop">10dp</item>
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:backgroundTint">#3949AB</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/score_grey</item>
+    </style>
+
+    <!-- UNDO -->
+    <style name="UndoBtn" parent="ActionBtn">
+        <item name="android:background">@drawable/score_red</item>
+    </style>
+
+    <!-- NEXT -->
+    <style name="NextBtn" parent="ActionBtn">
+        <item name="android:background">@drawable/score_orange</item>
     </style>
 
 </resources>
